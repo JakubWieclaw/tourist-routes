@@ -22,10 +22,8 @@ class DatabaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
 
         // Function to create the database
         override fun onCreate(db: SQLiteDatabase?) {
-                val CREATE_TABLE = ("CREATE TABLE " + TABLE_NAME + "("
-                        + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-                        + KEY_DESCRIPTION + " TEXT," + KEY_IMAGE + " BLOB" + ")")
-                db?.execSQL(CREATE_TABLE)
+                // if table is not created, create the table, otherwise do nothing
+                createBaseTable(db)
         }
 
         // Function to upgrade the database
@@ -45,7 +43,6 @@ class DatabaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
                 db.close()
         }
 
-        // Function to read data from the database
         // Function to read data from the database
         fun readData() : List<Trail> {
                 val list = ArrayList<Trail>()
@@ -69,8 +66,25 @@ class DatabaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
 
         // Insert example data into the database
         fun insertExampleData() {
-                insertData("Szlak 1", "Opis szlaku 1", null)
-                insertData("Szlak 2", "Opis szlaku 2", null)
-                insertData("Szlak 3", "Opis szlaku 3", null)
+                // if table is empty, insert example data
+                if (readData().isEmpty()) {
+                        insertData("Szlak 1", "Opis szlaku 1", null)
+                        insertData("Szlak 2", "Opis szlaku 2", null)
+                        insertData("Szlak 3", "Opis szlaku 3", null)
+                }
+        }
+
+        fun createBaseTable(db: SQLiteDatabase?) {
+                val CREATE_TABLE = ("CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("
+                        + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
+                        + KEY_DESCRIPTION + " TEXT," + KEY_IMAGE + " BLOB" + ")")
+                db?.execSQL(CREATE_TABLE)
+        }
+
+        // Delete data from database
+        fun deleteData() {
+                val db = this.writableDatabase
+                db.delete(TABLE_NAME, null, null)
+                db.close()
         }
 }
