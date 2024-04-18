@@ -1,79 +1,208 @@
 package com.example.hikingtrails
 
 import Trail
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.ui.Modifier
-import com.example.hikingtrails.ui.theme.HikingTrailsTheme
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.clickable
-import androidx.compose.material3.ListItem
-import androidx.compose.ui.graphics.Color
+import android.text.method.LinkMovementMethod
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.ListFragment
+import android.util.Log
+import android.widget.ArrayAdapter
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 
-class MainActivity : ComponentActivity() {
+
+
+
+class TrailListFragment : ListFragment() {
+    private var trailSelectListener: OnTrailSelectedListener? = null
+
+    interface OnTrailSelectedListener {
+        fun onTrailSelected(trailId: Int)
+        abstract fun displayOnTablet(trailId: Int)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        trailSelectListener = context as? OnTrailSelectedListener
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val trails = DatabaseHandler(requireContext()).readData()
+        val trailNames = trails.map { it.name }.toTypedArray()
+        val listAdapter = ArrayAdapter(inflater.context, android.R.layout.simple_list_item_1, trailNames)
+        setListAdapter(listAdapter)
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    @Deprecated("This method is deprecated.")
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        listView.setOnItemClickListener { _, _, position, _ ->
+            trailSelectListener?.onTrailSelected(position)
+        }
+    }
+}
+
+class TrailDetailsFragment : Fragment() {
+    companion object {
+        const val ARG_TRAIL_ID = "trail_id"
+    }
+
+    private var trailId: Int = 0
+    private var trail: Trail? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val db = DatabaseHandler(this)
-        db.insertExampleData()
-        val trails = db.readData()
-        setContent {
-            HikingTrailsTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    TrailsToCards(trails) {  }
-//                    ListDetailPaneScaffoldParts(trails)
+        trailId = savedInstanceState?.getInt(ARG_TRAIL_ID) ?: 0
+        println("TrailDetailsFragment onCreate: $trailId")
+    }
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        trailId = savedInstanceState?.getInt(ARG_TRAIL_ID) ?: 0
+        trail = DatabaseHandler(requireContext()).readData()[trailId]
+        return inflater.inflate(R.layout.trail_details, container, false)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        view?.let {
+            with(trail!!) {
+                it.findViewById<TextView>(R.id.textTitle).text = name
+                it.findViewById<TextView>(R.id.list_details).apply {
+                    text = description
+                    movementMethod = LinkMovementMethod.getInstance()
                 }
+            }
+        }
+    }
+
+}
+
+class DetailActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.trail_activity_details)
+
+        val trailsId = intent?.getIntExtra(TrailDetailsFragment.ARG_TRAIL_ID, 0) ?: 0
+        println("DetailActivity onCreate: $trailsId")
+        (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as? TrailDetailsFragment)?.apply {
+            arguments = Bundle().apply {
+                putInt(TrailDetailsFragment.ARG_TRAIL_ID, trailsId)
             }
         }
     }
 }
 
-@Composable
-fun TrailsToCards(
-    trails: List<Trail>,
-    onItemClick: (TrailIdx) -> Unit,
-) {
-    Card {
-        LazyColumn {
-            trails.forEachIndexed { idx, trail ->
-                item {
-                    ListItem(
-                        modifier = Modifier
-                            .background(Color.Magenta)
-                            .clickable {
-                                onItemClick(TrailIdx(idx))
-                            },
-                        headlineContent = {
-                            Text(trail.name)
-                        },
-                    )
-                }
-            }
+class MainActivity : AppCompatActivity(), TrailListFragment.OnTrailSelectedListener {
+
+    override fun onTrailSelected(trailId: Int) {
+        println("onTrailSelected: $trailId")
+//        val detailContainer = findViewById<View>(R.id.TrailsList)
+//        val detailContainer = null
+//        detailContainer?.let {
+//            displayOnTablet(trailId)
+//        } ?: run {
+//            Intent(this, TrailDetailsFragment::class.java).apply {
+//                putExtra(TrailDetailsFragment.ARG_TRAIL_ID, trailId)
+//                startActivity(this)
+//            }
+//        }
+        Intent(this, DetailActivity::class.java).apply {
+            putExtra(TrailDetailsFragment.ARG_TRAIL_ID, trailId)
+            startActivity(this)
         }
     }
-}
 
-class TrailIdx(val idx: Int) {
-
-    companion object {
-        val Saver: Saver<TrailIdx?, Int> = Saver(
-            { it?.idx },
-            ::TrailIdx,
-        )
+    override fun displayOnTablet(trailId: Int) {
+//        val details = TrailDetailsFragment().apply {
+//            arguments = Bundle().apply {
+//                putInt(TrailDetailsFragment.ARG_TRAIL_ID, trailId)
+//            }
+//        }
+//        supportFragmentManager.commit {
+//            replace(R.id.detail_fragment_container, details)
+//            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+//            addToBackStack(null)
+//        }
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        try{
+            setContentView(R.layout.activity_main)
+        } catch (e: Exception) {
+            Log.e("MainActivity", "Error setting content view", e)
+        }
+        setContentView(R.layout.activity_main)
+//        val fragmentContainer = findViewById<View>(R.id.TrailsList)
+    }
+
 }
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        val db = DatabaseHandler(this)
+//        db.insertExampleData()
+//        val trails = db.readData()
+//        setContent {
+//            HikingTrailsTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colorScheme.background
+//                ) {
+//                    TrailsToCards(trails) {  }
+////                    ListDetailPaneScaffoldParts(trails)
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//@Composable
+//fun TrailsToCards(
+//    trails: List<Trail>,
+//    onItemClick: (TrailIdx) -> Unit,
+//) {
+//    Card {
+//        LazyColumn {
+//            trails.forEachIndexed { idx, trail ->
+//                item {
+//                    ListItem(
+//                        modifier = Modifier
+//                            .background(Color.Magenta)
+//                            .clickable {
+//                                onItemClick(TrailIdx(idx))
+//                            },
+//                        headlineContent = {
+//                            Text(trail.name)
+//                        },
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//class TrailIdx(val idx: Int) {
+//
+//    companion object {
+//        val Saver: Saver<TrailIdx?, Int> = Saver(
+//            { it?.idx },
+//            ::TrailIdx,
+//        )
+//    }
+//}
 
 //
 //@OptIn(ExperimentalMaterial3AdaptiveApi::class)
