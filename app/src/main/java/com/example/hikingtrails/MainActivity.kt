@@ -46,6 +46,7 @@ class TrailListFragment : ListFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         listView.setOnItemClickListener { _, _, position, _ ->
+            println("TrailListFragment onActivityCreated: $position")
             trailSelectListener?.onTrailSelected(position)
         }
     }
@@ -56,19 +57,23 @@ class TrailDetailsFragment : Fragment() {
         const val ARG_TRAIL_ID = "trail_id"
     }
 
-    private var trailId: Int = 0
+    var trailId: Int = 0
     private var trail: Trail? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        trailId = savedInstanceState?.getInt(ARG_TRAIL_ID) ?: 0
+        if (savedInstanceState != null)
+        trailId = savedInstanceState.getInt(ARG_TRAIL_ID)
+//        val trailsId = intent.getIntExtra(TrailDetailsFragment.ARG_TRAIL_ID, 0) ?: 0
+
         println("TrailDetailsFragment onCreate: $trailId")
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        trailId = savedInstanceState?.getInt(ARG_TRAIL_ID) ?: 0
+//        trailId = savedInstanceState?.getInt(ARG_TRAIL_ID) ?: 0
+//        println("TrailDetailsFragment onCreateView: $trailId")
         trail = DatabaseHandler(requireContext()).readData()[trailId]
         return inflater.inflate(R.layout.trail_details, container, false)
     }
@@ -97,8 +102,10 @@ class DetailActivity : AppCompatActivity() {
         val trailsId = intent?.getIntExtra(TrailDetailsFragment.ARG_TRAIL_ID, 0) ?: 0
         println("DetailActivity onCreate: $trailsId")
         (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as? TrailDetailsFragment)?.apply {
+
             arguments = Bundle().apply {
                 putInt(TrailDetailsFragment.ARG_TRAIL_ID, trailsId)
+                trailId = trailsId
             }
         }
     }
@@ -120,6 +127,11 @@ class MainActivity : AppCompatActivity(), TrailListFragment.OnTrailSelectedListe
 //        }
         Intent(this, DetailActivity::class.java).apply {
             putExtra(TrailDetailsFragment.ARG_TRAIL_ID, trailId)
+//            (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as? TrailDetailsFragment)?.apply {
+//                arguments = Bundle().apply {
+//                    putInt(TrailDetailsFragment.ARG_TRAIL_ID, trailId)
+//                }
+//            }
             startActivity(this)
         }
     }
@@ -144,7 +156,7 @@ class MainActivity : AppCompatActivity(), TrailListFragment.OnTrailSelectedListe
         } catch (e: Exception) {
             Log.e("MainActivity", "Error setting content view", e)
         }
-        setContentView(R.layout.activity_main)
+//        setContentView(R.layout.activity_main)
 //        val fragmentContainer = findViewById<View>(R.id.TrailsList)
     }
 
