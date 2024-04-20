@@ -2,7 +2,6 @@ package com.example.hikingtrails
 
 import Trail
 import android.os.Bundle
-import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,31 +18,30 @@ class TrailDetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState != null)
-            trailId = savedInstanceState.getInt(ARG_TRAIL_ID)
-//        val trailsId = intent.getIntExtra(TrailDetailsFragment.ARG_TRAIL_ID, 0) ?: 0
-
-        println("TrailDetailsFragment onCreate: $trailId")
+        if (savedInstanceState != null) {
+//            trailId = savedInstanceState.getInt(ARG_TRAIL_ID)
+            println("TrailDetailsFragment onCreate(notnull): $trailId")
+        } else {
+            println("TrailDetailsFragment onCreate(null): $trailId")
+            // save trailId in state
+        }
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-//        trailId = savedInstanceState?.getInt(ARG_TRAIL_ID) ?: 0
-//        println("TrailDetailsFragment onCreateView: $trailId")
-        trail = DatabaseHandler(requireContext()).readData()[trailId]
-        return inflater.inflate(R.layout.trail_details, container, false)
+        println("TrailDetailsFragment onCreateView: $trailId")
+        trail = DatabaseHandler(requireContext()).readData()[trailId] // trail is assigned the value of the trail with the id of trailId
+        return inflater.inflate(R.layout.trail_details, container, false) // infate method is used to convert XML layout file into a view
     }
 
     override fun onStart() {
+        println("TrailDetailsFragment onStart: $trail")
         super.onStart()
         view?.let {
             with(trail!!) {
                 it.findViewById<TextView>(com.example.hikingtrails.R.id.textTitle).text = name
-                it.findViewById<TextView>(com.example.hikingtrails.R.id.list_details).apply {
-                    text = description
-                    movementMethod = android.text.method.LinkMovementMethod.getInstance()
-                }
+                it.findViewById<TextView>(com.example.hikingtrails.R.id.list_details).text = description
             }
         }
     }

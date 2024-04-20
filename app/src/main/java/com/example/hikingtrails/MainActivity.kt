@@ -20,42 +20,36 @@ import androidx.fragment.app.commit
 class MainActivity : AppCompatActivity(), TrailListFragment.OnTrailSelectedListener {
 
     override fun onTrailSelected(trailId: Int) {
-        println("onTrailSelected: $trailId")
-        val detailContainer = findViewById<View>(R.id.trail_details)
-        detailContainer?.let {
-            displayOnTablet(trailId)
+        println("MainActivity onTrailSelected: $trailId")
+        findViewById<View>(R.id.trail_details)?.let {
+            displayOnTablet(trailId) // displays the trail details on the tablet
         } ?: run {
             Intent(this, DetailActivity::class.java).apply {
-                putExtra(TrailDetailsFragment.ARG_TRAIL_ID, trailId)
-                startActivity(this)
+                putExtra(TrailDetailsFragment.ARG_TRAIL_ID, trailId) // needed to display the trail details on small screens
+                startActivity(this) // starts the DetailActivity
             }
         }
     }
 
     override fun displayOnTablet(trailId: Int) {
+        println("MainActivity displayOnTablet: $trailId")
         val details = TrailDetailsFragment().apply {
-            arguments = Bundle().apply {
-                putInt(TrailDetailsFragment.ARG_TRAIL_ID, trailId)
-            }
+            this.trailId = trailId // sets the trailId property of the TrailDetailsFragment
         }
-        details.trailId = trailId
         supportFragmentManager.commit {
-            replace(R.id.trail_details, details)
-            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            addToBackStack(null)
+            replace(R.id.trail_details, details) // R.id.trail_details is the id of the FrameLayout in activity_main.xml
+            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN) // animation when fragment is opened
+            addToBackStac(null) // allows user to go back to the previous fragment
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) { // bundle is a collection of key-value pairs
+        super.onCreate(savedInstanceState) // calls the superclass onCreate method
+        println("MainActivity onCreate")
         try{
-            setContentView(R.layout.activity_main)
+            setContentView(R.layout.activity_main) // sets the content view to activity_main.xml
         } catch (e: Exception) {
             Log.e("MainActivity", "Error setting content view", e)
-        }
-        val fragmentContainer = findViewById<View>(R.id.trail_details)
-        if (fragmentContainer != null && DatabaseHandler(this).readData().isNotEmpty()) {
-            displayOnTablet(0)
         }
     }
 
