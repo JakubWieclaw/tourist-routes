@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity(), TrailListFragment.OnTrailSelectedListe
         supportFragmentManager.commit {
             replace(R.id.trail_details, details) // R.id.trail_details is the id of the FrameLayout in activity_main.xml
             setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN) // animation when fragment is opened
-            addToBackStac(null) // allows user to go back to the previous fragment
+            addToBackStack(null) // allows user to go back to the previous fragment
         }
     }
 
