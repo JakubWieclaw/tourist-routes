@@ -28,6 +28,8 @@ class TrailListFragment : ListFragment() {
         savedInstanceState: Bundle?
     ): View? {
         println("TrailListFragment onCreateView")
+        // delete database
+        DatabaseHandler(requireContext()).deleteData()
         val trails = DatabaseHandler(requireContext()).readData() // get the trails from the database
 //        DatabaseHandler(requireContext()).insertExampleData()
         val trailNames = trails.map { it.name }.toTypedArray() // get the trail names

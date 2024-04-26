@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 
@@ -40,6 +41,7 @@ class TrailDetailsFragment : Fragment() {
         super.onStart()
         view?.let {
             with(trail!!) {
+                it.findViewById<ImageView>(R.id.image).setImageBitmap(image)
                 it.findViewById<TextView>(com.example.hikingtrails.R.id.textTitle).text = name
                 it.findViewById<TextView>(com.example.hikingtrails.R.id.list_details).text = description
             }
