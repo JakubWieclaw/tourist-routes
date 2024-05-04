@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.core.content.ContentProviderCompat
 import androidx.fragment.app.ListFragment
 
 class TrailListFragment : ListFragment() {
@@ -30,6 +31,10 @@ class TrailListFragment : ListFragment() {
         println("TrailListFragment onCreateView")
         // delete database
         DatabaseHandler(requireContext()).deleteData()
+        DatabaseHandler(requireContext()).insertExampleData(
+            requireContext()
+        )
+
         val trails = DatabaseHandler(requireContext()).readData() // get the trails from the database
 //        DatabaseHandler(requireContext()).insertExampleData()
         val trailNames = trails.map { it.name }.toTypedArray() // get the trail names

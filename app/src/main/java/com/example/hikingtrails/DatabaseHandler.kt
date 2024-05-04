@@ -13,7 +13,6 @@ import java.io.ByteArrayOutputStream
 // Class to handle creation and connection to the database
 class DatabaseHandler(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
-
     companion object {
         private const val DATABASE_VERSION = 1
         private const val DATABASE_NAME = "DB"
@@ -28,12 +27,14 @@ class DatabaseHandler(context: Context) :
     override fun onCreate(db: SQLiteDatabase?) {
         // if table is not created, create the table, otherwise do nothing
         createBaseTable(db)
+
     }
 
     // Function to upgrade the database
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
         onCreate(db)
+
     }
 
     // Function to insert data into the database
@@ -45,6 +46,7 @@ class DatabaseHandler(context: Context) :
         values.put(KEY_IMAGE, image)
         db.insert(TABLE_NAME, null, values)
         db.close()
+
     }
 
     // Function to read data from the database
@@ -70,19 +72,19 @@ class DatabaseHandler(context: Context) :
         }
         cursor.close()
         db.close()
-        if (list.isEmpty()) {
-            insertExampleData(context)
-        }
+//        if (list.isEmpty()) {
+//            insertExampleData(context)
+//        }
+
         return list
     }
 
-    // Insert example data into the database
     fun insertExampleData(context: Context) {
         // if table is empty, insert example data
         if (readData().isEmpty()) {
-            val jpg1 = BitmapFactory.decodeResource(context.resources, R.drawable.photo_1)
+            val jpg1 = BitmapFactory.decodeResource(context.resources, R.drawable.photo_2)
             val jpg2 = BitmapFactory.decodeResource(context.resources, R.drawable.photo_2)
-            val jpg3 = BitmapFactory.decodeResource(context.resources, R.drawable.photo_3)
+            val jpg3 = BitmapFactory.decodeResource(context.resources, R.drawable.photo_2)
 
             insertData("Szlak 1", "Opis szlaku 1", getBitmapAsByteArray(jpg1))
             insertData("Szlak 2", "Opis szlaku 2", getBitmapAsByteArray(jpg2))
@@ -103,6 +105,7 @@ class DatabaseHandler(context: Context) :
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
                 + KEY_DESCRIPTION + " TEXT," + KEY_IMAGE + " BLOB" + ")")
         db?.execSQL(CREATE_TABLE)
+
     }
 
     // Delete data from database

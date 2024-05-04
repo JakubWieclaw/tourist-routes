@@ -11,6 +11,7 @@ class DetailActivity : AppCompatActivity() {
 
         val trailsId = intent?.getIntExtra(TrailDetailsFragment.ARG_TRAIL_ID, 0) ?: 0 // get the trailsId from the intent
         println("DetailActivity onCreate: $trailsId")
+
         (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as? TrailDetailsFragment)?.apply { // get the fragment
             arguments = Bundle().apply { // set the arguments
                 trailId = trailsId // set the trailId

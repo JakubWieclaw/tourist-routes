@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 
 class TrailDetailsFragment : Fragment() {
     companion object {
@@ -22,8 +23,15 @@ class TrailDetailsFragment : Fragment() {
         if (savedInstanceState != null) {
 //            trailId = savedInstanceState.getInt(ARG_TRAIL_ID)
             println("TrailDetailsFragment onCreate(notnull): $trailId")
+
         } else {
             println("TrailDetailsFragment onCreate(null): $trailId")
+            val timer = TimerFragment()
+            val ft = childFragmentManager.beginTransaction()
+            ft.add(R.id.timer, timer)
+            ft.addToBackStack(null)
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            ft.commit()
             // save trailId in state
         }
     }
@@ -31,6 +39,7 @@ class TrailDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         println("TrailDetailsFragment onCreateView: $trailId")
         trail = DatabaseHandler(requireContext()).readData()[trailId] // trail is assigned the value of the trail with the id of trailId
         return inflater.inflate(R.layout.trail_details, container, false) // infate method is used to convert XML layout file into a view
