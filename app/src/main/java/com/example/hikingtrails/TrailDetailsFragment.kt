@@ -20,20 +20,14 @@ class TrailDetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState != null) {
-//            trailId = savedInstanceState.getInt(ARG_TRAIL_ID)
-            println("TrailDetailsFragment onCreate(notnull): $trailId")
-
-        } else {
-            println("TrailDetailsFragment onCreate(null): $trailId")
-            val timer = TimerFragment()
-            val ft = childFragmentManager.beginTransaction()
-            ft.add(R.id.timer, timer)
-            ft.addToBackStack(null)
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-            ft.commit()
-            // save trailId in state
+        val timerFragment = TimerFragment()
+        childFragmentManager.beginTransaction().apply {
+            replace(R.id.timer, timerFragment) // Utilize `replace` to manage fragments effectively
+            addToBackStack(null)
+            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            commit()
         }
+
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
