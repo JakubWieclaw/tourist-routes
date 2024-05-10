@@ -4,22 +4,17 @@ import Trail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.method.LinkMovementMethod
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.ListFragment
 import android.util.Log
-import android.widget.ArrayAdapter
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity(), TrailListFragment.OnTrailSelectedListener {
-
+    fun getResult(view: View){
+        Snackbar.make(view, "Akcja zrobienia zdjęcia", 1000).show()
+    }
     override fun onTrailSelected(trailId: Int) {
         println("MainActivity onTrailSelected: $trailId")
         findViewById<View>(R.id.trail_details)?.let {

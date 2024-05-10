@@ -27,7 +27,6 @@ class TrailDetailsFragment : Fragment() {
             setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             commit()
         }
-
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
