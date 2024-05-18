@@ -20,22 +20,28 @@ class TrailDetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val timerFragment = TimerFragment()
+
+        // Get the trailId from the arguments if available
+        arguments?.let {
+            trailId = it.getInt(ARG_TRAIL_ID)
+        }
+
+        val timerFragment = TimerFragment.newInstance(trailId)
         childFragmentManager.beginTransaction().apply {
-            replace(R.id.timer, timerFragment) // Utilize `replace` to manage fragments effectively
+            replace(R.id.timer, timerFragment)
             addToBackStack(null)
             setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             commit()
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         println("TrailDetailsFragment onCreateView: $trailId")
-        trail = DatabaseHandler(requireContext()).readData()[trailId] // trail is assigned the value of the trail with the id of trailId
-        return inflater.inflate(R.layout.trail_details, container, false) // infate method is used to convert XML layout file into a view
+        trail = DatabaseHandler(requireContext()).readData()[trailId]
+        return inflater.inflate(R.layout.trail_details, container, false)
     }
 
     override fun onStart() {
@@ -44,10 +50,9 @@ class TrailDetailsFragment : Fragment() {
         view?.let {
             with(trail!!) {
                 it.findViewById<ImageView>(R.id.image).setImageBitmap(image)
-                it.findViewById<TextView>(com.example.hikingtrails.R.id.textTitle).text = name
-                it.findViewById<TextView>(com.example.hikingtrails.R.id.list_details).text = description
+                it.findViewById<TextView>(R.id.textTitle).text = name
+                it.findViewById<TextView>(R.id.list_details).text = description
             }
         }
     }
-
 }

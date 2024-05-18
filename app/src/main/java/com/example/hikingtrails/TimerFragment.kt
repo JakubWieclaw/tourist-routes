@@ -10,13 +10,28 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 
-// https://www.geeksforgeeks.org/how-to-create-a-stopwatch-app-using-android-studio/ - inspiration
 class TimerFragment : Fragment() {
     private var elapsedTime: Int = 0
     private var isRunning: Boolean = false
+    private var trailId: Int = 0
+
+    companion object {
+        private const val ARG_TRAIL_ID = "trail_id"
+
+        fun newInstance(trailId: Int): TimerFragment {
+            val fragment = TimerFragment()
+            val args = Bundle()
+            args.putInt(ARG_TRAIL_ID, trailId)
+            fragment.arguments = args
+            return fragment
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        arguments?.let {
+            trailId = it.getInt(ARG_TRAIL_ID)
+        }
         savedInstanceState?.let {
             elapsedTime = it.getInt("elapsedTime")
             isRunning = it.getBoolean("isRunning")
@@ -33,10 +48,16 @@ class TimerFragment : Fragment() {
     }
 
     private fun setupButtons(view: View) {
-        view.findViewById<Button>(R.id.button).apply { setOnClickListener { isRunning = !isRunning; R.id.button.apply { text =
-            if (isRunning) "Stop" else "Start" } } }
-        view.findViewById<Button>(R.id.button3).apply { setOnClickListener {  elapsedTime=0 } }
+        view.findViewById<Button>(R.id.button).apply {
+            setOnClickListener {
+                isRunning = !isRunning
+                text = if (isRunning) "Stop" else "Start"
+            }
+        }
+        view.findViewById<Button>(R.id.button3).apply { setOnClickListener { elapsedTime = 0 } }
+        view.findViewById<Button>(R.id.button2).apply { setOnClickListener { stopAndSaveTime() } }
     }
+
     private fun startStopwatch(view: View) {
         val timeDisplay: TextView = view.findViewById(R.id.timer_text)
         val handler = Handler(Looper.getMainLooper())
@@ -57,6 +78,12 @@ class TimerFragment : Fragment() {
                 handler.postDelayed(this, 1000)
             }
         })
+    }
+
+    private fun stopAndSaveTime() {
+        isRunning = false
+        DatabaseHandler(requireContext()).insertTimeMeasurement(elapsedTime, trailId)
+        elapsedTime = 0
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

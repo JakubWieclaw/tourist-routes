@@ -21,13 +21,14 @@ class DatabaseHandler(context: Context) :
         private const val KEY_NAME = "name"
         private const val KEY_DESCRIPTION = "description"
         private const val KEY_IMAGE = "image"
+        private const val TIME_MEASURMENT_TABLE_NAME = "TimeMeasurement"
     }
 
     // Function to create the database
     override fun onCreate(db: SQLiteDatabase?) {
         // if table is not created, create the table, otherwise do nothing
         createBaseTable(db)
-
+        createTimeMeasurmentTable(db)
     }
 
     // Function to upgrade the database
@@ -108,10 +109,27 @@ class DatabaseHandler(context: Context) :
 
     }
 
+    // Create table for time measurments with foregin key to trails
+    fun createTimeMeasurmentTable(db: SQLiteDatabase?) {
+        val CREATE_TABLE = ("CREATE TABLE IF NOT EXISTS " + TIME_MEASURMENT_TABLE_NAME + "("
+                + "id INTEGER PRIMARY KEY," + "time INTEGER," + "trail_id INTEGER," + "FOREIGN KEY(trail_id) REFERENCES Trails(id)" + ")")
+        db?.execSQL(CREATE_TABLE)
+    }
+
     // Delete data from database
     fun deleteData() {
         val db = this.writableDatabase
         db.delete(TABLE_NAME, null, null)
+        db.delete(TIME_MEASURMENT_TABLE_NAME, null, null)
+        db.close()
+    }
+
+    fun insertTimeMeasurement(elapsedTime: Int, trailId: Int) {
+        val db = this.writableDatabase
+        val values = ContentValues()
+        values.put("time", elapsedTime)
+        values.put("trail_id", trailId)
+        db.insert(TIME_MEASURMENT_TABLE_NAME, null, values)
         db.close()
     }
 }
