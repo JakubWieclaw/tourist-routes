@@ -15,14 +15,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hikingtrails.DatabaseHandler
 
+// Modify TimeMeasurements.kt
+
 @Composable
 fun TimeMeasurements(trailId: Int, context: Context) {
     val dbHandler = DatabaseHandler(context)
-    val timeMeasurements = remember { mutableStateListOf<Int>() }
+    val timeMeasurements = remember { mutableStateListOf<Pair<Int, Long>>() }
 
     LaunchedEffect(trailId) {
         timeMeasurements.clear()
-        timeMeasurements.addAll(dbHandler.getTimeMeasurementsForTrail(trailId))
+        timeMeasurements.addAll(dbHandler.getTimeMeasurementsForTrailWithTimestamp(trailId))
     }
 
     if (timeMeasurements.isNotEmpty()) {
@@ -35,9 +37,9 @@ fun TimeMeasurements(trailId: Int, context: Context) {
                 fontSize = 20.sp,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-            timeMeasurements.forEach { measurement ->
+            timeMeasurements.forEachIndexed { index, measurement ->
                 Text(
-                    text = String.format("%02d:%02d:%02d", measurement / 3600, (measurement % 3600) / 60, measurement % 60),
+                    text = "Measurement ${index + 1}: ${String.format("%02d:%02d:%02d", measurement.first / 3600, (measurement.first % 3600) / 60, measurement.first % 60)} (Timestamp: ${measurement.second})",
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
             }
