@@ -132,4 +132,20 @@ class DatabaseHandler(context: Context) :
                 db.insert(TIME_MEASURMENT_TABLE_NAME, null, values)
                 db.close()
         }
+
+        fun getTimeMeasurementsForTrail(trailId: Int): List<Int> {
+                val list = ArrayList<Int>()
+                val selectQuery = "SELECT  * FROM $TIME_MEASURMENT_TABLE_NAME WHERE trail_id = $trailId"
+                val db = this.readableDatabase
+                val cursor = db.rawQuery(selectQuery, null)
+                if (cursor.moveToFirst()) {
+                        do {
+                                val time = cursor.getInt(1)
+                                list.add(time)
+                        } while (cursor.moveToNext())
+                }
+                cursor.close()
+                db.close()
+                return list
+        }
 }

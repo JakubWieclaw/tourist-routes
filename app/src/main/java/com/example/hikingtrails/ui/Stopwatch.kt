@@ -13,16 +13,14 @@ import androidx.compose.ui.unit.dp
 import com.example.hikingtrails.DatabaseHandler
 
 @Composable
-fun Stopwatch(trailId: Int, context: Context) {
-    var elapsedTime by remember { mutableStateOf(0) }
-    var isRunning by remember { mutableStateOf(false) }
+fun Stopwatch(trailId: Int, context: Context, elapsedTime: MutableState<Int>, isRunning: MutableState<Boolean>) {
     val handler = remember { Handler(Looper.getMainLooper()) }
 
-    LaunchedEffect(isRunning) {
-        if (isRunning) {
+    LaunchedEffect(isRunning.value) {
+        if (isRunning.value) {
             handler.post(object : Runnable {
                 override fun run() {
-                    elapsedTime++
+                    elapsedTime.value++
                     handler.postDelayed(this, 1000)
                 }
             })
@@ -33,7 +31,7 @@ fun Stopwatch(trailId: Int, context: Context) {
 
     fun saveTime() {
         val dbHandler = DatabaseHandler(context)
-        dbHandler.insertTimeMeasurement(elapsedTime, trailId)
+        dbHandler.insertTimeMeasurement(elapsedTime.value, trailId)
     }
 
     Column(
@@ -59,19 +57,24 @@ fun Stopwatch(trailId: Int, context: Context) {
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Text(
-                    text = String.format("%02d:%02d:%02d", elapsedTime / 3600, (elapsedTime % 3600) / 60, elapsedTime % 60),
+                    text = String.format(
+                        "%02d:%02d:%02d",
+                        elapsedTime.value / 3600,
+                        (elapsedTime.value % 3600) / 60,
+                        elapsedTime.value % 60
+                    ),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Button(onClick = { isRunning = !isRunning }) {
-                        Text(if (isRunning) "Pause" else "Start")
+                    Button(onClick = { isRunning.value = !isRunning.value }) {
+                        Text(if (isRunning.value) "Pause" else "Start")
                     }
                     Button(onClick = {
                         saveTime()
-                        elapsedTime = 0
-                        isRunning = false
+                        elapsedTime.value = 0
+                        isRunning.value = false
                     }) {
                         Text("Save & Reset")
                     }
