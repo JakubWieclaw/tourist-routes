@@ -72,4 +72,7 @@ dependencies {
     implementation(libs.androidx.adaptive.layout)
     implementation(libs.androidx.adaptive.navigation)
     implementation(libs.androidx.core.ktx)
+
+    implementation("io.coil-kt:coil-compose:1.4.0")
+
 }

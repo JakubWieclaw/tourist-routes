@@ -1,6 +1,7 @@
 package com.example.hikingtrails.ui
 
 import Trail
+import TrailDetails
 import androidx.activity.compose.BackHandler
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
@@ -12,7 +13,7 @@ import com.example.hikingtrails.TrailIdx
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-fun ListDetailPaneScaffoldParts(trails: List<Trail>) {
+fun ListDetailPaneScaffoldParts(trails: List<Trail>, context: android.content.Context) {
     val navigator = rememberListDetailPaneScaffoldNavigator<Nothing>()
 
     BackHandler(navigator.canNavigateBack()) {
@@ -37,7 +38,7 @@ fun ListDetailPaneScaffoldParts(trails: List<Trail>) {
         },
         detailPane = {
             selectedItem?.let { item ->
-                TrailDetails(trails[item.idx])
+                TrailDetails(trails[item.idx], context)
             }
         },
     )

@@ -1,23 +1,19 @@
-package com.example.hikingtrails.ui
-
-import Trail
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
+import com.example.hikingtrails.ui.Stopwatch
 
 @Composable
-fun TrailDetails(trail: Trail) {
+fun TrailDetails(trail: Trail, context: android.content.Context) {
+    val context = LocalContext.current
     val text = trail.name
     Card {
         Column(
@@ -29,11 +25,11 @@ fun TrailDetails(trail: Trail) {
                 text = "Details of $text",
                 fontSize = 24.sp,
             )
-            // Add showing of the trail.photo
-            trail.image?.let { drawable ->
-                val bitmap = drawable.toBitmap()
+            // Show the trail photo
+            trail.image?.let { imageUrl ->
+                val painter = rememberImagePainter(data = imageUrl)
                 Image(
-                    bitmap = bitmap.asImageBitmap(),
+                    painter = painter,
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -45,6 +41,12 @@ fun TrailDetails(trail: Trail) {
             Text(
                 text = trail.description
             )
+            Spacer(Modifier.size(16.dp))
+
+            // Add the Stopwatch composable and pass the trailId
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+                Stopwatch(trailId = trail.id, context = context)
+            }
         }
     }
 }
