@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
+import com.example.hikingtrails.ui.AppBar
 import com.example.hikingtrails.ui.CameraFab
 import com.example.hikingtrails.ui.Stopwatch
 import com.example.hikingtrails.ui.TimeMeasurements
@@ -27,6 +28,7 @@ fun TrailDetails(trail: Trail, context: android.content.Context) {
                     .fillMaxSize()
                     .padding(16.dp)
             ) {
+                AppBar(title = "Trail Details")
                 Text(
                     text = "Details of $text",
                     fontSize = 24.sp,
