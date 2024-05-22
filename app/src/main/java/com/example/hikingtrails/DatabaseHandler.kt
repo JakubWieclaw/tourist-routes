@@ -118,7 +118,7 @@ class DatabaseHandler(context: Context) :
         fun deleteData() {
                 val db = this.writableDatabase
                 db.delete(TABLE_NAME, null, null)
-                db.delete(TIME_MEASUREMENT_TABLE_NAME, null, null)
+                //db.delete(TIME_MEASUREMENT_TABLE_NAME, null, null)
                 db.close()
         }
 

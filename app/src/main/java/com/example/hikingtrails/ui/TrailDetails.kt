@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
+import com.example.hikingtrails.ui.CameraFab
 import com.example.hikingtrails.ui.Stopwatch
 import com.example.hikingtrails.ui.TimeMeasurements
 
@@ -18,44 +19,51 @@ import com.example.hikingtrails.ui.TimeMeasurements
 fun TrailDetails(trail: Trail, context: android.content.Context) {
     val context = LocalContext.current
     val text = trail.name
-    Card {
-        Column(
-            Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            Text(
-                text = "Details of $text",
-                fontSize = 24.sp,
-            )
-            // Show the trail photo
-            trail.image?.let { imageUrl ->
-                val painter = rememberImagePainter(data = imageUrl)
-                Image(
-                    painter = painter,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .padding(bottom = 16.dp)
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Card(modifier = Modifier.fillMaxSize()) {
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Details of $text",
+                    fontSize = 24.sp,
                 )
-            }
-            Spacer(Modifier.size(16.dp))
-            Text(
-                text = trail.description
-            )
-            Spacer(Modifier.size(16.dp))
+                // Show the trail photo
+                trail.image?.let { imageUrl ->
+                    val painter = rememberImagePainter(data = imageUrl)
+                    Image(
+                        painter = painter,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .padding(bottom = 16.dp)
+                    )
+                }
+                Spacer(Modifier.size(16.dp))
+                Text(
+                    text = trail.description
+                )
+                Spacer(Modifier.size(16.dp))
 
-            // Show time measurements
-            TimeMeasurements(trailId = trail.id, context = context)
+                // Show time measurements
+                TimeMeasurements(trailId = trail.id, context = context)
 
-            // Add the Stopwatch composable and pass the trailId
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-                val stopwatchKey = "stopwatch_${trail.id}"
-                val stopwatchState = remember(stopwatchKey) { mutableStateOf(0) }
-                val isRunningState = remember(stopwatchKey) { mutableStateOf(false) }
-                Stopwatch(trailId = trail.id, context = context, elapsedTime = stopwatchState, isRunning = isRunningState)
+                // Add the Stopwatch composable and pass the trailId
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+                    val stopwatchKey = "stopwatch_${trail.id}"
+                    val stopwatchState = remember(stopwatchKey) { mutableStateOf(0) }
+                    val isRunningState = remember(stopwatchKey) { mutableStateOf(false) }
+                    Stopwatch(trailId = trail.id, context = context, elapsedTime = stopwatchState, isRunning = isRunningState)
+                }
             }
+        }
+        // Place the CameraFab at the top right
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopEnd) {
+            CameraFab(context = context, modifier = Modifier.padding(16.dp))
         }
     }
 }
