@@ -20,8 +20,8 @@ fun ListDetailPaneScaffoldParts(trails: List<Trail>, context: android.content.Co
         navigator.navigateBack()
     }
 
-    var selectedItem: TrailIdx? by rememberSaveable(stateSaver = TrailIdx.Saver) {
-        mutableStateOf(null)
+    var selectedItem by rememberSaveable(stateSaver = TrailIdx.Saver) {
+        mutableStateOf(TrailIdx.None)
     }
 
     ListDetailPaneScaffold(
@@ -37,8 +37,12 @@ fun ListDetailPaneScaffoldParts(trails: List<Trail>, context: android.content.Co
             )
         },
         detailPane = {
-            selectedItem?.let { item ->
-                TrailDetails(trails[item.idx], context)
+            if (selectedItem != TrailIdx.None) {
+                // Ensure the index is within the bounds of the list
+                val trail = trails.getOrNull(selectedItem.idx)
+                trail?.let {
+                    TrailDetails(it, context)
+                }
             }
         },
     )

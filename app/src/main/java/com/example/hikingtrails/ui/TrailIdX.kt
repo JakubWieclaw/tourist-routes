@@ -2,11 +2,12 @@ package com.example.hikingtrails
 
 import androidx.compose.runtime.saveable.Saver
 
-class TrailIdx(val idx: Int) {
+data class TrailIdx(val idx: Int) {
     companion object {
-        val Saver: Saver<TrailIdx?, Int> = Saver(
-            { it?.idx },
-            ::TrailIdx,
+        val Saver: Saver<TrailIdx, *> = Saver(
+            save = { it.idx },
+            restore = { TrailIdx(it) }
         )
+        val None = TrailIdx(-1)
     }
 }
