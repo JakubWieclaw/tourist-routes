@@ -41,7 +41,7 @@ fun ListDetailPaneScaffoldParts(trails: List<Trail>, context: android.content.Co
                 // Ensure the index is within the bounds of the list
                 val trail = trails.getOrNull(selectedItem.idx)
                 trail?.let {
-                    AppBar(title = "Trail Details")
+                    //AppBar(title = "Trail Details")
                     TrailDetails(it, context)
                 }
             }
