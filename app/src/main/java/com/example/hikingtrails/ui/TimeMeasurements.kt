@@ -39,7 +39,7 @@ fun TimeMeasurements(trailId: Int, context: Context) {
             )
             timeMeasurements.forEachIndexed { index, measurement ->
                 Text(
-                    text = "Measurement ${index + 1}: ${String.format("%02d:%02d:%02d", measurement.first / 3600, (measurement.first % 3600) / 60, measurement.first % 60)} (Timestamp: ${measurement.second})",
+                    text = "Measurement ${index + 1}: ${String.format("%02d:%02d:%02d", measurement.first / 3600, (measurement.first % 3600) / 60, measurement.first % 60)}",
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
             }

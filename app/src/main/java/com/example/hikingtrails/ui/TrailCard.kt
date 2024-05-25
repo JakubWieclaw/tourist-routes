@@ -28,7 +28,7 @@ fun TrailCard(trail: Trail, onItemClick: (TrailIdx) -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable { onItemClick(TrailIdx(trail.id)) }
+            .clickable { onItemClick(TrailIdx(trail.id - 1)) }
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
