@@ -16,9 +16,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val db = DatabaseHandler(this)
         // delete data from the database and then recreate it
-        db.deleteData()
+        // db.deleteData()
         //db.insertExampleData(context = this)
-        db.insertAccurateData(context = this)
+        // db.insertAccurateData(context = this)
         val trails = db.readData()
         setContent {
             HikingTrailsTheme {
