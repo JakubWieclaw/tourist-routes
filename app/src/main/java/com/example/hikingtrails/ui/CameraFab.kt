@@ -3,6 +3,9 @@ package com.example.hikingtrails.ui
 import android.content.Context
 import android.content.Intent
 import android.provider.MediaStore
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -13,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import com.example.hikingtrails.R
 
 @Composable
@@ -29,8 +33,9 @@ fun CameraFab(context: Context, modifier: Modifier = Modifier ) {
 
     FloatingActionButton(
         onClick = { fabClick.value = true },
-        modifier = modifier
+        modifier = modifier.size(48.dp),
+        shape = CircleShape
     ) {
-        Text("Take a photo")
+        Image(painter = painterResource(id = R.drawable.camera), contentDescription = "Take a photo")
     }
 }

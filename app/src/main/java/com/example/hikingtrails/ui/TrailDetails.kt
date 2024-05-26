@@ -81,7 +81,7 @@ fun TrailDetails(trail: Trail, context: android.content.Context) {
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Details of ${trail.name}",
+                    text = "${trail.name}",
                     fontSize = 24.sp,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
@@ -111,10 +111,6 @@ fun TrailDetails(trail: Trail, context: android.content.Context) {
             }
         }
 
-        // FloatingActionButton at the top right
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopEnd) {
-            CameraFab(context = context, modifier = Modifier.padding(16.dp))
-        }
 
         // Collapsed Image
         Box(
@@ -135,6 +131,10 @@ fun TrailDetails(trail: Trail, context: android.content.Context) {
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxWidth()
                 )
+            }
+            // FloatingActionButton at the top right
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopEnd) {
+                CameraFab(context = context, modifier = Modifier.padding(16.dp))
             }
         }
     }

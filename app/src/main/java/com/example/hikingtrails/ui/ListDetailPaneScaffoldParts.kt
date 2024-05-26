@@ -42,7 +42,6 @@ fun ListDetailPaneScaffoldParts(trails: List<Trail>, context: android.content.Co
     }
 
 
-
     ListDetailPaneScaffold(
         directive = navigator.scaffoldDirective,
         value = navigator.scaffoldValue,
@@ -51,18 +50,17 @@ fun ListDetailPaneScaffoldParts(trails: List<Trail>, context: android.content.Co
                 trails,
                 onItemClick = { idx ->
                     selectedItem = idx
-                    //navigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
                     navigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
                 }
             )
         },
         detailPane = {
             if (selectedItem != TrailIdx.None) {
-//                val trail = trails.getOrNull(selectedItem.idx)
-//                trail?.let {
-//                    TrailDetails(it, context)
-//                }
-                val pagerState = rememberPagerState(pageCount = { trails.size }, initialPage = selectedItem.idx)
+                val pagerState =
+                    rememberPagerState(pageCount = { trails.size }, initialPage = selectedItem.idx)
+                LaunchedEffect(selectedItem) {
+                    pagerState.scrollToPage(selectedItem.idx)
+                }
                 HorizontalPager(state = pagerState) { page ->
                     val trail = trails.getOrNull(page)
                     trail?.let {
