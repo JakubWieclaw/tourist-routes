@@ -98,13 +98,14 @@ fun TrailDetails(trail: Trail, context: android.content.Context) {
                 // Add the Stopwatch composable and pass the trailId
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomCenter) {
                     val stopwatchKey = "stopwatch_${trail.id}"
-                    val stopwatchState = remember(stopwatchKey) { mutableStateOf(0) }
-                    val isRunningState = remember(stopwatchKey) { mutableStateOf(false) }
+//                    val stopwatchState = remember(stopwatchKey) { mutableStateOf(0) }
+//                    val isRunningState = remember(stopwatchKey) { mutableStateOf(false) }
                     Stopwatch(
                         trailId = trail.id,
                         context = context,
-                        elapsedTime = stopwatchState,
-                        isRunning = isRunningState
+                        key = stopwatchKey
+//                        elapsedTime = stopwatchState,
+//                        isRunning = isRunningState
                     )
                 }
             }

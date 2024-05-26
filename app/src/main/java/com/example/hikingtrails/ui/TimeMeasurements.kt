@@ -34,11 +34,6 @@ fun TimeMeasurements(trailName: String, trailId: Int, context: Context) {
                 .padding(horizontal = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-//            Text(
-//                text = "Time Measurements:",
-//                fontSize = 20.sp,
-//                modifier = Modifier.padding(bottom = 8.dp)
-//            )
             timeMeasurements.forEachIndexed { index, measurement ->
                 Text(
                     text = "${index + 1}. ${String.format("%02d:%02d:%02d", measurement.first / 3600, (measurement.first % 3600) / 60, measurement.first % 60)}",
