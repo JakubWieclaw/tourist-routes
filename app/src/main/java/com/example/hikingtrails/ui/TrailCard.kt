@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -42,13 +40,13 @@ fun TrailCard(trail: Trail, onItemClick: (TrailIdx) -> Unit) {
                 Box(
                     modifier = Modifier
                         .size(128.dp)
-                        .clip(CircleShape) // Clip the Box to a circle
+                        .clip(CircleShape)
                 ) {
                     Image(
                         bitmap = image.asImageBitmap(),
                         contentDescription = null,
-                        contentScale = ContentScale.Crop, // Crop the image to fit within the Box
-                        modifier = Modifier.fillMaxSize() // Fill the entire Box
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             }
