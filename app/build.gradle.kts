@@ -78,5 +78,6 @@ dependencies {
 
     implementation ("androidx.compose.runtime:runtime-livedata:1.3.3")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
+    implementation("com.google.accompanist:accompanist-pager:0.24.13-rc")
 
 }
