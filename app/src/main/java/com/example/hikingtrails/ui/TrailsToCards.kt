@@ -1,7 +1,6 @@
 package com.example.hikingtrails.ui
 
 import Trail
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -16,7 +15,7 @@ fun TrailsToCards(
     onItemClick: (TrailIdx) -> Unit,
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(150.dp), // Adjust the size as needed
+        columns = GridCells.Adaptive(150.dp),
         modifier = Modifier.padding(8.dp)
     ) {
         items(trails.size) { idx ->

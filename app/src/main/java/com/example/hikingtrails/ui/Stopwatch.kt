@@ -1,39 +1,37 @@
 package com.example.hikingtrails.ui
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.hikingtrails.DatabaseHandler
-
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.savedstate.SavedStateRegistryOwner
+import com.example.hikingtrails.DatabaseHandler
+import com.example.hikingtrails.R
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
-import androidx.lifecycle.AbstractSavedStateViewModelFactory
-import androidx.lifecycle.ViewModelProvider
-import androidx.savedstate.SavedStateRegistryOwner
-
-import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.res.painterResource
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.hikingtrails.R
-
-//import androidx.lifecycle.viewmodel.compose.viewModel
 
 class StopwatchViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
     private var timerJob: Job? = null
@@ -122,11 +120,6 @@ fun Stopwatch(trailId: Int, context: Context, key: String) {
             .padding(16.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Box(
-            modifier = Modifier.weight(1f)
-        ) {
-            // Empty space
-        }
         Box(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.BottomCenter
