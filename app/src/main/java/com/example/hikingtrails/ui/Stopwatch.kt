@@ -3,6 +3,7 @@ package com.example.hikingtrails.ui
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -27,8 +28,10 @@ import androidx.savedstate.SavedStateRegistryOwner
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.hikingtrails.R
 
 //import androidx.lifecycle.viewmodel.compose.viewModel
 
@@ -148,13 +151,21 @@ fun Stopwatch(trailId: Int, context: Context, key: String) {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Button(onClick = { viewModel.toggleTimer() }) {
-                        Text(if (isRunning) "Pause" else "Start")
+                        Image(
+                            painter = painterResource(id = if (isRunning) R.drawable.pause else R.drawable.start),
+                            contentDescription = if (isRunning) "Pause" else "Start",
+                            modifier = Modifier.size(48.dp)
+                        )
                     }
                     Button(onClick = {
                         saveTime()
                         viewModel.resetTimer()
                     }) {
-                        Text("Save & Reset")
+                        Image(
+                            painter = painterResource(id = R.drawable.save),
+                            contentDescription = "Save & Reset",
+                            modifier = Modifier.size(48.dp)
+                        )
                     }
                 }
             }
